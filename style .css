@@ -1,0 +1,72 @@
+body{
+    background-color: #043b7a;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+h1{
+    color: white;
+    text-align: center;
+}
+#card , #card2 {
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 20px;
+}
+#plainText{
+    width: auto;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+#shiftValue{
+    width: 150px;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+#cipher {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+}
+#cipher:hover{
+    background-color: #45a049;
+}
+
+#decipher {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+}
+
+#decipher:hover{
+    background-color: #e53935;
+}
+#card h2{
+    margin-top: 0;
+}
+#card2 h2{
+    margin-top: 0;
+}
+#clear {
+    background-color: #008CBA;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+}
