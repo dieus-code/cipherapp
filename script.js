@@ -1,11 +1,13 @@
 
 const plainText = document.getElementById('plainText');
+const encryptedText =document.getElementById('encryptedText');
 const shift = document.getElementById('shiftValue');
+const unshift = document.getElementById('unshiftValue');
 const cipherButton = document.getElementById('cipher');
 const decipherButton = document.getElementById('decipher');
 const card = document.getElementById('card');
 const card2 = document.getElementById('card2');
-const clear = document.getElementById('clear');
+const deleteBtn = document.getElementById('delete');
 
 
 const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
@@ -44,10 +46,6 @@ function decipherText(cipheredText, shiftValue) {
 }
 
 // 4. Storage & UI Helper
-function updateStorage(text) {
-    localStorage.setItem('cipheredText', text);
-    card2.innerHTML = text;
-}
 
 // 5. Event Listeners
 cipherButton.addEventListener('click', () => {
@@ -56,57 +54,87 @@ cipherButton.addEventListener('click', () => {
     const result = cipherText(text, shiftValue);
     
     card.innerHTML = result;
-    updateStorage(result);
+    historyList.innerHTML = '';
+    saveMessageToLocalStorage('cipheredText', result);
+    renderHistory('cipheredText');
 });
 
 decipherButton.addEventListener('click', () => {
-    const textToDecipher = card.innerHTML.toLowerCase(); 
-    const shiftValue = parseInt(shift.value) || 0;
+    const text = encryptedText.value;
+    const shiftValue = parseInt(unshift.value) || 0;
+    const result = decipherText(text, shiftValue);
     
-    if (textToDecipher && textToDecipher !== "no text to decipher.") {
-        card.innerHTML = decipherText(textToDecipher, shiftValue);
-    } else {
-        card.innerHTML = "No text to decipher.";
-    }
+    card2.innerHTML = result;
+   
+});
+function saveMessageToLocalStorage(type, message) {
+    // 1. Correctly assign the key name based on the type
+    let storageKey = type === 'cipheredText' ? 'encryptedMessages' : 'decryptedMessages';
+
+    // 2. Get the existing array for that specific key
+    let messages = JSON.parse(localStorage.getItem(storageKey)) || [];
+
+    // 3. Add the new message to the array
+   messages.push({
+    text: message,
+    time: new Date().toLocaleTimeString()
 });
 
-clear.addEventListener('click', () => {
-    localStorage.removeItem('cipheredText');
-    // Important: Clear the actual display boxes too!
-    card.innerHTML = "";
-    card2.innerHTML = "";
-    plainText.value = "";
-});
+    // 4. Save the updated array back to localStorage
+    localStorage.setItem(storageKey, JSON.stringify(messages));
+}
 
-// 6. Persistence: Load saved data when the page opens
-window.addEventListener('DOMContentLoaded', () => {
-    const saved = localStorage.getItem('cipheredText');
-    if (saved) {
-        card2.innerHTML = saved;
-    }
-});
-// 1. Add the new selector at the top
-const decipherSavedButton = document.getElementById('decipherSaved');
-
-// 2. Add the event listener
-decipherSavedButton.addEventListener('click', () => {
-    // Target card2 (the stored text)
-    const storedText = card2.innerHTML.toLowerCase(); 
-    const shiftValue = parseInt(shift.value) || 0;
+function renderHistory(type) {
+    const storageKey = type === 'cipheredText' ? 'encryptedMessages' : 'decryptedMessages';
+    const messages = JSON.parse(localStorage.getItem(storageKey)) || [];
     
-    if (storedText && storedText !== "no text to decipher.") {
-        // Run the decipher logic
-        const decrypted = decipherText(storedText, shiftValue);
-        
-        // Update the display to show the decoded message
-        card2.innerHTML = decrypted;
-        
-        // Optional: Update localStorage with the decrypted version
-        // localStorage.setItem('cipheredText', decrypted);
-    } else {
-        card2.innerHTML = "No saved text found.";
-    }
+    // Assuming you have a <ul> or <div> with this ID in your HTML
+    const historyList = document.getElementById('historyList');
+    historyList.innerHTML = ''; 
+
+    messages.forEach((item, index) => {
+        const li = document.createElement('li');
+        li.className = "history-item";
+
+        // Create the checkbox
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.className = 'history-checkbox';
+        // You can use the index to identify which message this checkbox belongs to
+        checkbox.dataset.index = index; 
+
+        // Create the text label
+        const span = document.createElement('span');
+        span.innerHTML = `  ${item.text} <strong> [${item.time}]</strong>`;
+
+        // Append them to the list item
+        li.appendChild(checkbox);
+        li.appendChild(span);
+        historyList.appendChild(li);
+     
+
+    });
+}
+function deleteSelectedMessages(type) {
+    const storageKey = type === 'cipheredText' ? 'encryptedMessages' : 'decryptedMessages';
+    let messages = JSON.parse(localStorage.getItem(storageKey)) || [];
+
+    // Get all checkboxes that are checked
+    const checkboxes = document.querySelectorAll('.history-checkbox:checked');
+    
+    // We get the indices of items to remove
+    const indicesToRemove = Array.from(checkboxes).map(cb => parseInt(cb.dataset.index));
+
+    // Filter the array: keep only items whose index is NOT in our "to remove" list
+    const filteredMessages = messages.filter((_, index) => !indicesToRemove.includes(index));
+
+    // Save the new filtered list back to storage and refresh UI
+    localStorage.setItem(storageKey, JSON.stringify(filteredMessages));
+    renderHistory(type);
+}
+// This ensures the list appears immediately on refresh
+document.addEventListener('DOMContentLoaded', () => {
+    // If you want to show both, call them both
+    renderHistory('cipheredText'); 
+    
 });
-// implement a list to store all previous encryptions and decryptions.
-// 1. Create a new array to hold the history
-//

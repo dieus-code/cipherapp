@@ -1,0 +1,42 @@
+deleteButton.addEventListener("click", deleteTasks);
+// Initialize tasks in localStorage only if not already set
+function saveTasksToLocalStorage() {
+    const tasks = [];
+    taskList.querySelectorAll("li").forEach(function(li) {
+        const label = li.querySelector("span");
+        const checkbox = li.querySelector("input[type='checkbox']");
+        tasks.push({
+            text: label.textContent,
+            checked: checkbox.checked
+        });
+    });
+    localStorage.setItem("newTasks", JSON.stringify(tasks));
+}
+// Save checked tasks to localStorage whenever a checkbox is changed
+taskList.addEventListener("change", function(e) {
+    if (e.target && e.target.type === "checkbox") {
+        saveTasksToLocalStorage();
+    }
+});
+
+function loadTasksFromLocalStorage() {
+    const storedTasks = localStorage.getItem("newTasks");
+    if (storedTasks) {
+        const taskListArray = JSON.parse(storedTasks);
+        taskListArray.forEach(function(task) {
+            const newTask = document.createElement("li");
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.checked = task.checked;
+
+            const taskLabel = document.createElement("span");
+            taskLabel.textContent = task.text;
+            newTask.appendChild(checkbox);
+            newTask.appendChild(taskLabel);
+            taskList.appendChild(newTask);
+        });
+    }
+}
+
+// Load tasks on page load
+loadTasksFromLocalStorage();
