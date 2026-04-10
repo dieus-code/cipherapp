@@ -1,27 +1,60 @@
-   <html>
-   <head>
-       <title>ceaser cypher program</title>
-       <link rel="stylesheet" type="text/css" href="style.css">
-   </head>
-   <body>
-    <div><h1>Caesar Cipher</h1></div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caesar Cipher | Encryption Application</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
     
-    <div>
-       <textarea placeholder="enter text" id="plainText"></textarea><br>
-       <input type="number" placeholder=" enter key" id="shiftValue">
-       </div>
-       <div>
-       <button id="cipher">cipher</button>
-       </div>
-       <div>
-        <div id="card"></div>
-       <button id="decipher">decipher</button>
-       </div>
-       <div>
-        <div id="card2"></div>
-        <button id="clear">Clear</button>
-         </div>
-   
-    <script src = "script.js"></script>
-   </body>
-   </html>
+        <header>
+            <h1>Caesar Cipher</h1>
+            <p>Secure your messages with a simple shift</p>
+        </header>
+       
+       <div class="container">
+            <div class="encrypt">
+                <textarea id="plainText" placeholder="Enter text to encrypt..."></textarea>
+                <label for="shiftValue">Shift:</label>
+                <input type="number" id="shiftValue" placeholder="e.g. 3" value="3">
+              </div>
+                <button id="cipher" class="btn-primary">Encrypt Text</button>
+
+                  <div class="output">
+                <h2>Output:</h2>
+                <div id="card" >
+                    <p id="outputText">Your encrypted will appear here...</p>
+                </div>
+                 </div>
+
+            <div class="decrypt">
+                <textarea id="encryptedText" placeholder="Enter text to decrypt..."></textarea>
+                <label for="shiftValue">Shift:</label>
+                <input type="number" id="unshiftValue" placeholder="e.g. 3" value="3">
+            </div>
+                <button id="decipher" class="btn-primary">Decrypt Text</button>
+                
+            
+
+                <div class="output">
+                <h2>Output:</h2>
+                
+                 <div id="card2" class="card" >
+                    <p id="outputText">Your decrypted will appear here...</p>
+                </div>
+                 </div>
+
+            <div class="storage">
+                <h2> Encryption History:</h2>
+                <div class="list" id="historyList">     
+                </div>       
+                 
+        
+            </div>
+    
+             <button class="btn-primary" id="delete" onclick="deleteSelectedMessages('cipheredText')">delete message</button>
+            </div>
+    <script src="script.js"></script>
+</body>
+</html>
